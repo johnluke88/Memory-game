@@ -415,10 +415,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalCard: {fileID: 1799676906}
   images:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 571e7f5cb6d8d4f92825fe22e77e1b7b, type: 3}
+  - {fileID: 21300000, guid: 8d6754846ead34f2380cce6d841852a4, type: 3}
+  - {fileID: 21300000, guid: ef107fa41ea624c23b52388da835e4eb, type: 3}
+  - {fileID: 21300000, guid: a46a620e2ea5b429cac443cdc752d0c5, type: 3}
 --- !u!1 &1799676902
 GameObject:
   m_ObjectHideFlags: 0
