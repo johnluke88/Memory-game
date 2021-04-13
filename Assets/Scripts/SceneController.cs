@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public const int gridRows = 2;
-    public const int gridCols = 4;
+    public int gridRows = 0;
+    public int gridCols = 0;
     public const float offsetX = 2f;
     public const float offsetY = 2.5f;
 
@@ -17,13 +18,24 @@ public class SceneController : MonoBehaviour
 
     private int _score = 0;
 
+    [SerializeField] private TextMesh scoreLabel;
+
     // Start is called before the first frame update
     void Start()
     {
         Vector3 startPos = originalCard.transform.position;
-        int[] numbers = {0, 0, 1, 1, 2, 2, 3, 3};
+        int[] numbers = new int[images.Length*2];
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            numbers[i] = (int)(i / 2);
+        }
+
+        gridCols = numbers.Length / 2;
+        int carry = numbers.Length % 2;
+        gridRows = numbers.Length / gridCols + carry; 
+
         numbers = ShuffleArray(numbers);
- 
+
         for (int i = 0; i < gridCols; i++) {
             for (int j = 0; j < gridRows; j++) {
                 MemoryCard card;
@@ -36,16 +48,15 @@ public class SceneController : MonoBehaviour
                     card = Instantiate(originalCard) as MemoryCard;
                 }
 
-                int index = j * gridCols + i;
+                int index =  j * gridCols + i;
                 int id = numbers[index];
-                originalCard.SetCard(id, images[id]);
+                card.SetCard(id, images[id]);
 
                 float posX = (offsetX * i) + startPos.x;
                 float posY =  -(offsetY * j) + startPos.y;
                 card.transform.position = new Vector3(posX, posY, startPos.z);
             }
         }
-
     }
 
     private int[] ShuffleArray(int[] numbers)
@@ -81,7 +92,7 @@ public class SceneController : MonoBehaviour
         if (_firstRevealed.id == _secondRevealed.id)
         {
             _score++;
-            Debug.Log("Score: " + _score);
+            scoreLabel.text = "Score: " + _score;
         }
         else 
         {
@@ -93,5 +104,9 @@ public class SceneController : MonoBehaviour
 
         _firstRevealed = null;
         _secondRevealed = null;
+    }
+
+    public void Restart() {
+        SceneManager.LoadScene("SampleScene");
     }
 }
