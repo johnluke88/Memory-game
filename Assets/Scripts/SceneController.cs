@@ -7,7 +7,7 @@ public class SceneController : MonoBehaviour
 {
     public int gridRows = 0;
     public int gridCols = 0;
-    public const float offsetX = 2f;
+    public const float offsetX = 1.5f;
     public const float offsetY = 2.5f;
 
     [SerializeField] private MemoryCard originalCard;
@@ -15,6 +15,7 @@ public class SceneController : MonoBehaviour
 
     private MemoryCard _firstRevealed;
     private MemoryCard _secondRevealed;
+    private MemoryCard _thirdRevealed;
 
     private int _score = 0;
 
@@ -24,10 +25,10 @@ public class SceneController : MonoBehaviour
     void Start()
     {
         Vector3 startPos = originalCard.transform.position;
-        int[] numbers = new int[images.Length*2];
+        int[] numbers = new int[images.Length*3];
         for (int i = 0; i < numbers.Length; i++)
         {
-            numbers[i] = (int)(i / 2);
+            numbers[i] = (int)(i / 3);
         }
 
         gridCols = numbers.Length / 2;
@@ -72,24 +73,30 @@ public class SceneController : MonoBehaviour
     }
     public bool canReveal
     {
-        get { return _secondRevealed == null; }
+        get { return _secondRevealed == null || _thirdRevealed == null; }
     }
 
     public void CardRevealed(MemoryCard card) {
         if (_firstRevealed == null)
         {
             _firstRevealed = card;
+            Debug.Log("_firstRevealed ID: " + _firstRevealed.id);
         }
-        else 
+        else if (_secondRevealed == null)
         {
             _secondRevealed = card;
+            Debug.Log("_secondRevealed ID: " + _secondRevealed.id);
+        }
+        else
+        {
+            _thirdRevealed = card;
             StartCoroutine(CheckMatch());
         }
     }
 
     private IEnumerator CheckMatch()
     {
-        if (_firstRevealed.id == _secondRevealed.id)
+        if (_firstRevealed.id == _thirdRevealed.id && _secondRevealed.id == _thirdRevealed.id)
         {
             _score++;
             scoreLabel.text = "Score: " + _score;
@@ -100,10 +107,12 @@ public class SceneController : MonoBehaviour
 
             _firstRevealed.Unreveal();
             _secondRevealed.Unreveal();
+            _thirdRevealed.Unreveal();
         }
 
         _firstRevealed = null;
         _secondRevealed = null;
+        _thirdRevealed = null;
     }
 
     public void Restart() {
